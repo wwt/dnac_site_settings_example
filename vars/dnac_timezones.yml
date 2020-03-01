@@ -1,0 +1,9 @@
+timezones:
+  - location: "Maryland Heights, MO"
+    site_name: "Central"
+  - location: "Atlanta, GA"
+    site_name: "East"
+  - location: "San Francisco, CA"
+    site_name: "West"
+  - location: "Denver, CO"
+    site_name: "Mountain"

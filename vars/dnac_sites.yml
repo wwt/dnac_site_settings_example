@@ -1,0 +1,115 @@
+sites:
+  # North America
+  - name: "NorthAmerica"
+    site_type: "area"
+    parent_name: "Global"
+  - name: "East"
+    site_type: "area"
+    parent_name: "NorthAmerica"
+  - name: "West"
+    site_type: "area"
+    parent_name: "NorthAmerica"
+  - name: "Mountain"
+    site_type: "area"
+    parent_name: "NorthAmerica"
+  - name: "Central"
+    site_type: "area"
+    parent_name: "NorthAmerica"
+
+  - name: "STL Technology Campus"
+    site_type: "area"
+    parent_name: "Central"
+  - name: "Building56"
+    site_type: "building"
+    parent_name: "STL Technology Campus"
+    building_address: "56 Weldon Parkway, Maryland Heights, MO 63043"
+  - name: "bldg56_floor_1"
+    parent_name: "Building56"
+    site_type: "floor"
+    rf_model: 'Cubes And Walled Offices'
+    height: '10'
+    width: '100'
+    length: '100'
+  - name: "Building58"
+    site_type: "building"
+    parent_name: "STL Technology Campus"
+    building_address: "58 Weldon Parkway, Maryland Heights, MO 63043"
+  - name: "bldg58_floor_1"
+    parent_name: "Building58"
+    site_type: "floor"
+    rf_model: 'Cubes And Walled Offices'
+    height: '10'
+    width: '200'
+    length: '300'
+  - name: "Building60"
+    site_type: "building"
+    parent_name: "STL Technology Campus"
+    building_address: "60 Weldon Parkway, Maryland Heights, MO 63043"
+  - name: "bldg60_floor_1"
+    parent_name: "Building60"
+    site_type: "floor"
+    rf_model: 'Cubes And Walled Offices'
+    height: '10'
+    width: '200'
+    length: '300'
+  - name: "Building62"
+    site_type: "building"
+    parent_name: "STL Technology Campus"
+    building_address: "62 Weldon Parkway, Maryland Heights, MO 63043"
+  - name: Atlanta
+    site_type: "building"
+    parent_name: "East"
+    building_address: "309 E Paces Ferry Road NE, Atlanta, GA 30305"
+  - name: SanFran
+    site_type: "building"
+    parent_name: "West"
+    building_address: "71 Stevenson Street, San Francisco, CA 94105"
+  - name: Denver
+    site_type: "building"
+    parent_name: "Mountain"
+    building_address: "2300 15th Street, Denver, Colorado 80202"
+
+  # North American Integration Center
+  - name: "NAIC"
+    site_type: "area"
+    parent_name: "Central"
+  - name: "NAIC Building 1"
+    site_type: "building"
+    parent_name: "NAIC"
+    building_address: "107 Gateway Commerce Center Dr. North, Edwardsville, IL 62025"
+  - name: "NAIC Building 2"
+    site_type: "building"
+    parent_name: "NAIC"
+    building_address: "108 Gateway Commerce Center Dr. North, Edwardsville, IL 62025"
+  - name: "NAIC Building 3"
+    site_type: "building"
+    parent_name: "NAIC"
+    building_address: "3971 Lakeview Corporate Drive, Edwardsville, Illinois 62040"
+
+  # EMEA
+  - name: "EMEA"
+    site_type: "area"
+    parent_name: "Global"
+  - name: "Amsterdam"
+    site_type: "building"
+    parent_name: "EMEA"
+    building_address: "300 Fokkerweg, Oude Meer, Noord-Holland, 1438 AN"
+  - name: "London"
+    site_type: "building"
+    parent_name: "EMEA"
+    building_address: "25 Canada Square, Canary Wharf, London, E14 5LQ, UK"
+
+  # APAC
+  - name: "APAC"
+    site_type: "area"
+    parent_name: "Global"
+
+  - name: "Singapore OFfice"
+    site_type: "building"
+    parent_name: "APAC"
+    building_address: "10 Marina Blvd, Singapore 018983"
+
+  - name: "Tokyo"
+    site_type:
+    parent_name:
+    building_address: "Yurakucho Itocia 12F 2 Chome-7-1 Yurakucho, Chiyoda City, Tokyo 100-0006"

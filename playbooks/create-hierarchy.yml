@@ -1,0 +1,80 @@
+#!/usr/bin/ansible-playbook
+---
+#
+#      Copyright (c) 2019 World Wide Technology
+#      All rights reserved.
+#
+#      author: Jeff Andiorio, jeff.andiorio@wwt.com
+#
+#      description: DNA Center Build Hierarchy Playbook for Cisco Automation Exchange
+#
+#      usage:  ansible-playbook -i inventory/hosts.yml playbooks/create-hierarchy.yml -e "{'host_groups':'dna_2_dnac','desired_state':'present'}" --ask-vault-pass
+#
+#      inputs:
+#        - host_groups: target DNA Center
+#        - desired_state:  present|absent
+#
+- name: DNA Center - Build Sites
+  connection: local
+  hosts: "{{ host_groups }}"
+  gather_facts: false
+
+  collections:
+    - wwt.ansible_dnac
+
+  tasks:
+
+    - name: import data
+      include_vars:
+        dir: '../vars/'
+        files_matching: 'dnac.*'
+      delegate_to: localhost
+
+    # DNA Center Site Creation
+    - name: create areas
+      dnac_site:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "{{ desired_state }}"
+        name: "{{ item.name }}"
+        site_type: "{{ item.site_type }}"
+        parent_name: "{{ item.parent_name }}"
+      loop: "{{ sites }}"
+      when:  item.site_type == 'area'
+
+    # DNA Center Create Buildings
+    - name: create buildings
+      dnac_site:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "{{ desired_state }}"
+        name: "{{ item.name }}"
+        site_type: "{{ item.site_type }}"
+        parent_name: "{{ item.parent_name }}"
+        address: "{{ item.building_address }}"
+        latitude: "{{ lookup('wwt.ansible_dnac.geo',item.building_address).latitude }}"
+        longitude: "{{ lookup('wwt.ansible_dnac.geo',item.building_address).longitude }}"
+      loop: "{{ sites }}"
+      when:  item.site_type == 'building'
+
+    # DNA Center Floor Creation
+    - name: create floors
+      dnac_site:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "{{ desired_state }}"
+        name: "{{ item.name }}"
+        site_type: "{{ item.site_type }}"
+        parent_name: "{{ item.parent_name }}"
+        rf_model: 'Cubes And Walled Offices'
+        height: "{{ item.height }}"
+        width: "{{ item.width }}"
+        length: "{{ item.length }}"
+      loop: "{{ sites }}"
+      when:  item.site_type == 'floor'

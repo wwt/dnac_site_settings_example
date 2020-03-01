@@ -1,0 +1,161 @@
+#!/usr/bin/ansible-playbook
+---
+#
+#      Copyright (c) 2019 World Wide Technology
+#      All rights reserved.
+#
+#      author: Jeff Andiorio, jeff.andiorio@wwt.com
+#
+#      description: DNA Center Network Settings Playbook for Cisco Automation Exchange
+#
+#      usage:  ansible-playbook -i inventory/hosts.yml playbooks/3-create-network-settings.yml -e "{'host_groups':'dna_3_dnac','desired_state':'present'}" --ask-vault-pass
+#
+#      inputs:
+#        - host_groups: target DNA Center
+#
+- name: DNA Center Build
+  connection: local
+  hosts: "{{ host_groups }}"
+  gather_facts: false
+
+  collections:
+    - wwt.ansible_dnac
+
+  tasks:
+
+    - name: import data
+      include_vars:
+        dir: '../vars/'
+        files_matching: 'dnac.*'
+      delegate_to: localhost
+
+    - name: network settings - dhcp server(s)
+      dnac_dhcp:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "{{ desired_state }}"
+        dhcp_servers:
+          - "{{ settings.dhcp_server }}"
+
+    - name: network settings - dns server(s)
+      dnac_dns:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username  }}"
+        password: "{{ password }}"
+        state:  "{{ desired_state }}"
+        primary_dns_server: "{{ settings.dns_server }}"
+        domain_name: campus.wwtatc.local
+
+    - name: network settings - syslog server(s)
+      dnac_syslog:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "{{ desired_state }}"
+        syslog_servers:
+          - "{{ settings.syslog_server }}"
+
+    - name: network settings - snmp server(s)
+      dnac_snmp:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "{{ desired_state }}"
+        snmp_servers:
+          - "{{ settings.snmp_server }}"
+
+    - name: network settings - netflow
+      dnac_netflow:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "{{ desired_state }}"
+        netflow_collector: "{{ settings.netflow_collector }}"
+        netflow_port: "{{ settings.netflow_port }}"
+
+    - name: network settings - NTP server(s)
+      dnac_ntp:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "{{ desired_state }}"
+        ntp_servers:
+          - "{{ settings.ntp_server }}"
+
+    # TIMEZONES
+    - name: network settings - timezone
+      dnac_timezone:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "{{ desired_state }}"
+        # timezone: "America/Chicago"
+        group_name: "{{ item.site_name }}"
+        location: "{{ item.location }}"
+      loop: "{{ timezones }}"
+
+    - name: network settings - banner
+      dnac_banner:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "{{ desired_state }}"
+        banner_message: "Welcome to DNAC + Ansible Lab"
+
+    - name: create a user
+      dnac_cli_credential:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "{{ desired_state }}"
+        cli_user: "{{ item.name }}"
+        cli_password: "{{ item.password }}"
+        cli_enable_password: "{{ item.enable_password }}"
+        cli_desc: "{{ item.descr }}"
+        cli_comments: "{{ item.comments }}"
+      loop: "{{ cli_credentials }}"
+
+    - name: create snmpv2 communities
+      dnac_snmpv2_credential:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "{{ desired_state }}"
+        credential_type: "{{ item.type }}"
+        snmp_community: "{{ item.community }}"
+        snmp_description: "{{ item.descr }}"
+        snmp_comments:  "{{ item.comments }}"
+      loop: "{{ snmp_credentials }}"
+
+    - name: select CLI user at the Global Level
+      dnac_activate_credential:
+        host: "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        credential_name: "{{ item.name }}"
+        credential_type: "{{ item.type }}"
+        group_name: "{{ item.group }}"
+      loop: "{{ cli_credentials }}"
+
+    - name: select snmp credential at the Global Level
+      dnac_activate_credential:
+        host:  "{{ inventory_hostname }}"
+        port: '443'
+        username: "{{ username }}"
+        password: "{{ password }}"
+        credential_name: "{{ item.descr }}"
+        credential_type: "{{ item.type }}"
+        group_name: "{{ item.group }}"
+      loop: "{{ snmp_credentials }}"
