@@ -24,6 +24,8 @@ If you are testing out this sample on your own environment you will need to tack
 
 4. Modify `inventory/hosts.yml` to match your environment
 
+> **NOTE**: The DNA Center REST API Bundle needs to be enabled on DNA Center.  Find out how [here](https://developer.cisco.com/docs/dna-center/#!cisco-dna-center-platform-overview).
+
 ![Setup](demo_collection_setup.gif)
 
 ## Creating Sites
