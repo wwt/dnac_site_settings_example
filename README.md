@@ -24,6 +24,8 @@ If you are testing out this sample on your own environment you will need to tack
 
 4. Modify `inventory/hosts.yml` to match your environment
 
+![Setup](demo_collection_setup.gif)
+
 ## Creating Sites
 
 This sample playbook demonstrates how you can use the `wwt.ansible_dnac` Ansible collection to create sites on DNA Center.
@@ -47,6 +49,8 @@ In DNA Center, there are three different types of sites; area, building, floor. 
 > The **host_groups** extra_var can point to the group or host in your inventory.
 
 DNA Center will require a building address and the latitude/longitude when creating a building.  The playbook illustrates using a lookup plugin to populate the latitude/longitude.  The lookup plugin is located in the `plugins/lookup` directory of the collection.  You could optionally resolve the values manually and include them in your dataset.
+
+![Create Site Hierarchy](./demo_create_hierarchy.gif)
 
 ## Creating Settings
 
